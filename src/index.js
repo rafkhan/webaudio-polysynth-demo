@@ -1,17 +1,22 @@
 import _ from 'lodash';
-
+import Oscillator from './oscillator';
 
 const audioCtx = new AudioContext();
 
-function playSound() {
+function playTwoSounds() {
     console.log('play');
     audioCtx.resume(); // has to receive input from user to start
 
-    const oscillator = audioCtx.createOscillator();
-    oscillator.type = 'square';
-    oscillator.frequency.setValueAtTime(440, audioCtx.currentTime); // value in hertz
-    oscillator.connect(audioCtx.destination);
-    oscillator.start();
+    const osc = new Oscillator(audioCtx, audioCtx.destination);
+
+    // lmao callback hell
+    osc.playFrequency(400);
+    setTimeout(() => {
+        osc.playFrequency(500);
+        setTimeout(() => {
+            osc.stop();
+        }, 2000);
+    }, 2000);
 }
 
-document.getElementById('button').onclick = playSound;
+document.getElementById('button').onclick = playTwoSounds;
