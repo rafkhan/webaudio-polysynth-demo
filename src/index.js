@@ -1,13 +1,17 @@
 import _ from 'lodash';
 
 
-function component() {
-    const element = document.createElement('div');
-  
-    console.log(_.map);
-    element.innerHTML = "Hello web audio!";
-  
-    return element;
+const audioCtx = new AudioContext();
+
+function playSound() {
+    console.log('play');
+    audioCtx.resume(); // has to receive input from user to start
+
+    const oscillator = audioCtx.createOscillator();
+    oscillator.type = 'square';
+    oscillator.frequency.setValueAtTime(440, audioCtx.currentTime); // value in hertz
+    oscillator.connect(audioCtx.destination);
+    oscillator.start();
 }
-  
-document.body.appendChild(component());
+
+document.getElementById('button').onclick = playSound;
