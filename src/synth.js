@@ -43,8 +43,14 @@ export default class Synth {
 
         const firstAvailableVoiceIndex = findIndex(this.activeVoices, isActive => isActive === false);
 
+        // see if there is a voice available
         if(firstAvailableVoiceIndex === -1) {
             // none left :(
+            // TODO handle case where voice needs to be eliminated from LIFO
+            return;
+        }
+
+        if(this.oscillatorIndexByNoteNumber[noteNumber]) {
             return;
         }
 
@@ -62,7 +68,7 @@ export default class Synth {
         } = this.getNoteData(note);
 
         const oscIndex = this.oscillatorIndexByNoteNumber[noteNumber];
-        this.oscillatorIndexByNoteNumber[noteNumber] = null; // clear this just in case
+        this.oscillatorIndexByNoteNumber[noteNumber] = null;
 
         const lastPlayedIndex = this.lastPlayedVoices.indexOf(oscIndex);
         if (lastPlayedIndex > -1) {
