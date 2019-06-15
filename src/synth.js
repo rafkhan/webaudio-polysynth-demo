@@ -60,5 +60,16 @@ export default class Synth {
         const {
             noteNumber
         } = this.getNoteData(note);
+
+        const oscIndex = this.oscillatorIndexByNoteNumber[noteNumber];
+        this.oscillatorIndexByNoteNumber[noteNumber] = null; // clear this just in case
+
+        const lastPlayedIndex = this.lastPlayedVoices.indexOf(oscIndex);
+        if (lastPlayedIndex > -1) {
+            this.lastPlayedVoices.splice(lastPlayedIndex, 1);
+        }
+
+        this.activeVoices[oscIndex] = false;
+        this.oscillators[oscIndex].stop();
     }
 }
