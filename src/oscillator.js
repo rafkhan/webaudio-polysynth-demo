@@ -6,7 +6,7 @@ export default class Oscillator {
         // We use a gain node to "start" and "stop" the track
         // This is basically achieved by muting and unmuting the gain node that sits
         // infront of the oscillator.
-        this.gainNode = audioCtx.createGain(); 
+        this.gainNode = audioCtx.createGain();
         this.oscNode.connect(this.gainNode);
         this.gainNode.connect(destinationNode);
 
