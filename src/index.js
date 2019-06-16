@@ -1,27 +1,34 @@
 import _ from 'lodash';
-import Synth from './synth';
+import * as webmidi from "webmidi";
 
+import Synth from './synth';
 
 const audioCtx = new AudioContext();
 
-function setupSynth() {
-    console.log('play');
-    audioCtx.resume(); // has to receive input from user to start
-
+function onMidiEnabled() {
     const synth = new Synth(audioCtx);
+    const input = webmidi.inputs[0];
 
-    // LOL
-    // document.getElementById('button').onclick = () => {
-    //     setTimeout(() => synth.onNoteDown('C-4'), 200);
-    //     setTimeout(() => synth.onNoteDown('F-4'), 400);
-    //     setTimeout(() => synth.onNoteDown(70), 600);
+    input.addListener('noteon', "all", e => {
+        synth.onNoteDown(e.note.number);
+    });
 
-    //     setTimeout(() => {
-    //         synth.onNoteUp('C-4');
-    //         synth.onNoteUp('F-4');
-    //         synth.onNoteUp(70);
-    //     }, 3000);
-    // };
+    input.addListener('noteoff', "all", e => {
+        synth.onNoteUp(e.note.number);
+    });
+
+    console.log('probably ready to play lol');
+}
+
+function setupSynth() {
+    audioCtx.resume(); // has to receive input from user to start
+    webmidi.enable(err => {
+        if(err) {
+            throw err;
+        }
+
+        onMidiEnabled();
+    });
 }
 
 document.getElementById('button').onclick = setupSynth;

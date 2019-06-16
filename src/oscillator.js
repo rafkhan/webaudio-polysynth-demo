@@ -2,6 +2,7 @@ export default class Oscillator {
     constructor(audioCtx, destinationNode) {
         this.audioCtx = audioCtx;
         this.oscNode = audioCtx.createOscillator();
+        this.oscNode.type = 'sawtooth';
 
         // We use a gain node to "start" and "stop" the track
         // This is basically achieved by muting and unmuting the gain node that sits
