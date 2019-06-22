@@ -5,6 +5,13 @@ import Synth from './synth';
 
 const audioCtx = new AudioContext();
 
+const handleControlChange = synth => (e) => {
+    switch(e.controller.number) {
+        case 22:
+            synth.onFilterChange(e.value);
+    }
+}
+
 function onMidiEnabled() {
     const synth = new Synth(audioCtx);
     const input = webmidi.inputs[0];
@@ -16,6 +23,9 @@ function onMidiEnabled() {
     input.addListener('noteoff', "all", e => {
         synth.onNoteUp(e.note.number);
     });
+
+      // Listen to control change message on all channels
+    input.addListener('controlchange', "all", handleControlChange(synth));
 
     console.log('probably ready to play lol');
 }
